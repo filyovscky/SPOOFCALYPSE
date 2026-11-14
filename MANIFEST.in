@@ -1,4 +1,4 @@
-include README.md THIRD_PARTY.md NOTICE LICENSE CHANGELOG.md
+include README.md README.ru.md THIRD_PARTY.md NOTICE LICENSE CHANGELOG.md
 include requirements*.txt scope.example.txt spoofcalypse.cmd
 include test_spoof_check.py test_mail_validation.py
 recursive-include licenses *

@@ -1,10 +1,11 @@
 # SPOOFCALYPSE
 
-Проверка почтовой защиты доменов: SPF, DMARC, DKIM и MX.
-Работает со списком доменов и файлами `.eml`. Отчёты — Markdown, CSV и JSON.
-API-ключи не нужны.
+[Russian documentation](README.ru.md)
 
-## Установка
+SPF, DMARC, DKIM and MX checks for domain lists. DKIM signature verification for `.eml` files.
+Reports: Markdown, CSV and JSON. No API keys required.
+
+## Installation
 
 Python 3.11+. Windows CMD:
 
@@ -25,70 +26,65 @@ python3 -m venv .venv
 .venv/bin/spoofcalypse --help
 ```
 
-## Проверка доменов
+## Domain checks
 
-Один домен на строку в `scope.txt`. Пример — [scope.example.txt](scope.example.txt).
+Put one domain per line in `scope.txt`. See [scope.example.txt](scope.example.txt).
 
 ```cmd
 spoofcalypse.cmd --file scope.txt --dkim-api --workers 4 --csv report.csv --md report.md
-```
-
-Другие варианты:
-
-```cmd
 spoofcalypse.cmd example.com
 spoofcalypse.cmd --file scope.txt --brief
 spoofcalypse.cmd --file scope.txt --json > report.json
 ```
 
-В Linux/macOS вместо `spoofcalypse.cmd` используйте `.venv/bin/spoofcalypse`.
+On Linux/macOS, replace `spoofcalypse.cmd` with `.venv/bin/spoofcalypse`.
 
-## Проверка письма
+## Email checks
 
 ```cmd
 spoofcalypse.cmd --eml message.eml --md email_report.md
 spoofcalypse.cmd --eml first.eml --eml second.eml --json > emails.json
 ```
 
-Проверяются все DKIM-подписи. Ключи берутся из DNS по селекторам письма.
-`PASS` означает, что хотя бы одна подпись верна. Проверка `.eml` не оценивает DMARC-выравнивание From.
-Результаты писем входят в Markdown и JSON. CSV содержит только домены.
+Checks all DKIM signatures using selectors from the message and public keys from DNS.
+`PASS` means at least one signature verifies. This mode does not evaluate DMARC From alignment.
+Email results appear in Markdown and JSON. CSV contains domain results only.
 
-## Статусы
+## Statuses
 
-| Проверка | Статусы |
+| Check | Statuses |
 | --- | --- |
-| Домен | `SPOOFABLE`, `POSSIBLE`, `NOT_SPOOFABLE`, `UNKNOWN` |
-| Поиск DKIM | `FOUND`, `NOT_FOUND`, `PARTIAL`, `ERROR`, `SKIPPED` |
-| DKIM-ключ | `VALID`, `INVALID`, `REVOKED`, `UNSUPPORTED` |
-| Подпись письма | `PASS`, `FAIL`, `ERROR`, `UNSIGNED` |
+| Domain | `SPOOFABLE`, `POSSIBLE`, `NOT_SPOOFABLE`, `UNKNOWN` |
+| DKIM discovery | `FOUND`, `NOT_FOUND`, `PARTIAL`, `ERROR`, `SKIPPED` |
+| DKIM key | `VALID`, `INVALID`, `REVOKED`, `UNSUPPORTED` |
+| Email signature | `PASS`, `FAIL`, `ERROR`, `UNSIGNED` |
 
-`NOT_SPOOFABLE` — обход не выявлен по DNS. `UNKNOWN` — данных недостаточно.
-Риск `0–100` — сумма факторов. `N/A` — оценка не рассчитана.
-`NOT_FOUND` — ключ не найден среди проверенных селекторов.
-`NXDOMAIN` — DNS-имя не существует, а не подтверждение доступности регистрации.
+`NOT_SPOOFABLE`: no bypass identified by DNS checks. `UNKNOWN`: insufficient data.
+Risk `0–100`: sum of risk factors. `N/A`: score not calculated.
+`NOT_FOUND`: no key found among the checked selectors.
+`NXDOMAIN`: the DNS name does not exist. Registration availability is not checked.
 
-## Основные параметры
+## Options
 
-| Параметр | Назначение |
+| Option | Function |
 | --- | --- |
-| `--file FILE` | Список доменов |
-| `--md FILE` | Подробный Markdown-отчёт |
-| `--csv FILE` | Таблица доменов |
-| `--json` | JSON в stdout |
-| `--eml FILE` | Проверка DKIM-подписей, можно повторять |
-| `--dkim-api` | Дополнительные селекторы из публичного архива prove.email |
-| `--selectors a,b` | Дополнительные DKIM-селекторы |
-| `--no-dkim` | Пропустить поиск DKIM-селекторов |
-| `--dns IP` | DNS-резолвер |
-| `--workers N` | Потоки, по умолчанию 16 |
-| `--timeout N` | DNS-таймаут в секундах, по умолчанию 10 |
-| `--brief` | Только сводка в терминале |
+| `--file FILE` | Domain list |
+| `--md FILE` | Detailed Markdown report |
+| `--csv FILE` | Domain results table |
+| `--json` | JSON to stdout |
+| `--eml FILE` | Verify DKIM signatures. Repeatable |
+| `--dkim-api` | Additional selectors from the public prove.email archive |
+| `--selectors a,b` | Additional DKIM selectors |
+| `--no-dkim` | Skip DKIM selector discovery |
+| `--dns IP` | DNS resolver |
+| `--workers N` | Worker threads. Default: 16 |
+| `--timeout N` | DNS timeout in seconds. Default: 10 |
+| `--brief` | Terminal summary only |
 
-Архив селекторов — дополнительный источник. При его недоступности продолжается обычная DNS-проверка.
-DMARC обрабатывается по RFC 9989. Устаревшие `pct`, `rf`, `ri` отмечаются в диагностике.
+If the selector archive is unavailable, DNS checks continue without archived selectors.
+DMARC processing follows RFC 9989. Deprecated `pct`, `rf` and `ri` tags produce diagnostics.
 
-## Тесты
+## Tests
 
 ```cmd
 .venv\Scripts\python.exe -m pip install -r requirements-dev.txt
@@ -96,10 +92,10 @@ DMARC обрабатывается по RFC 9989. Устаревшие `pct`, `r
 spoofcalypse.cmd --selftest
 ```
 
-## Лицензия и авторство
+## License and attribution
 
-**CC BY-NC 4.0 — некоммерческое использование с указанием авторства.**
-Матрица решений адаптирована из [Spoofy](https://github.com/MattKeeley/Spoofy), автор Matt Keeley.
-Изменения и сторонние библиотеки перечислены в [THIRD_PARTY.md](THIRD_PARTY.md).
-Полный текст лицензии — [LICENSE](LICENSE). Атрибуция — [NOTICE](NOTICE).
-Для коммерческого использования заимствованной матрицы требуется отдельное разрешение правообладателя.
+**CC BY-NC 4.0: non-commercial use with attribution.**
+The decision matrix is adapted from [Spoofy](https://github.com/MattKeeley/Spoofy) by Matt Keeley.
+Changes and dependency licenses: [THIRD_PARTY.md](THIRD_PARTY.md).
+License text: [LICENSE](LICENSE). Attribution: [NOTICE](NOTICE).
+Commercial use of the upstream matrix requires separate permission from its rights holder.
