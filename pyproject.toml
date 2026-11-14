@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spoofcalypse"
+version = "0.1.0"
+description = "SPF, DMARC, DKIM and MX checks with Markdown, CSV and JSON reports"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "CC-BY-NC-4.0"
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY.md", "licenses/**/*"]
+authors = [{name = "filyovscky"}]
+dynamic = ["dependencies"]
+
+[project.urls]
+Repository = "https://github.com/filyovscky/SPOOFCALYPSE"
+Issues = "https://github.com/filyovscky/SPOOFCALYPSE/issues"
+
+[project.scripts]
+spoofcalypse = "spoof_check:main"
+
+[tool.setuptools]
+py-modules = ["spoof_check", "mail_validation", "spoofcalypse"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}

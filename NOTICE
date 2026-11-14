@@ -1,0 +1,17 @@
+SPOOFCALYPSE 0.1.0
+Project: https://github.com/filyovscky/SPOOFCALYPSE
+Maintainer and adaptation: filyovscky
+
+The SPF/DMARC decision matrix in spoof_check.py (TABLE) is adapted from
+Spoofy by Matt Keeley: https://github.com/MattKeeley/Spoofy
+Source material is licensed under Creative Commons Attribution-NonCommercial
+4.0 International: https://creativecommons.org/licenses/by-nc/4.0/
+
+Changes include Python integration, checkdmarc validation, domain-scope input,
+DNS error handling, risk factors, DKIM key inspection, .eml verification,
+and Markdown/CSV/JSON reports. Microsoft 365 delivery tests described by
+Spoofy have not been repeated by this project.
+
+SPOOFCALYPSE is distributed under CC BY-NC 4.0. Third-party libraries and
+their license texts retain their original licenses. See THIRD_PARTY.md.
+This project is not endorsed by the upstream authors.
